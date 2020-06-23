@@ -1,21 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
-func main() {
-	fmt.Println("this is a meissedfasdfasdfasdfasdf")
-	foo()
-	fmt.Println("after foo")
+func foo() {
+	fmt.Println("THIS IS THE FOO")
+}
 
-	for i := 0; i < 100; i++ {
-		fmt.Println(i)
-			if i % 2 == 0 {
-				fmt.Println("this is an even number")
-			}
+func hello(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "hello\n")
+}
+
+func headers(w http.ResponseWriter, req *http.Request) {
+
+	for name, headers := range req.Header {
+		for _, h := range headers {
+			fmt.Fprintf(w, "%v: %v\n", name, h)
+		}
 	}
 }
 
-func foo() {
-	fmt.Println("THIS IS THE FOO MANG")
+func main() {
+	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/headers", headers)
+
+	http.ListenAndServe(":8090", nil)
+	fmt.Print("serving it up on 8090")
 }
-// control flow
